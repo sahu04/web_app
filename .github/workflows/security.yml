@@ -1,0 +1,55 @@
+name: ZAP Security Scan
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the web application
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: zap_scan
+
+      - name: Create ZAP Work Directory
+        run: mkdir -p $GITHUB_WORKSPACE/zap/wrk
+
+      - name: Adjust Permissions
+        run: sudo chown -R $(whoami) $GITHUB_WORKSPACE/zap
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Print Directory Structure
+        run: ls -R $GITHUB_WORKSPACE
+
+
+      - name: Run python main.py
+        run: python main.py
+
+      - name: Pull ZAP Docker Image
+        run: docker pull ghcr.io/zaproxy/zaproxy:stable
+
+      - name: Get Host IP Address
+        id: get_host_ip
+        run: |
+          HOST_IP=$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1)
+          echo "Host IP: $HOST_IP"
+          echo "::set-output name=host_ip::$HOST_IP"
+
+      - name: ZAP Scan
+        run: |
+          docker run -t --rm -v $GITHUB_WORKSPACE/zap/wrk:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://${{ steps.get_host_ip.outputs.host_ip }}:5000 -g /zap/wrk/gen.conf -r /zap/wrk/testreport.html
+          
+          # Add your additional steps here if needed
