@@ -31,6 +31,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
+      - name: Run python main.py
+        run: nohup python main.py &
+          
       - name: Print Directory Structure
         run: ls -R $GITHUB_WORKSPACE
 
