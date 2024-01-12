@@ -34,23 +34,10 @@ jobs:
       - name: Print Directory Structure
         run: ls -R $GITHUB_WORKSPACE
 
-
-      - name: Run python main.py
-        run: nohup python main.py &
-
-
-      - name: Pull ZAP Docker Image
-        run: docker pull ghcr.io/zaproxy/zaproxy:stable
-
       - name: Get Host IP Address
         id: get_host_ip
-        run: |
-          HOST_IP=$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1)
-          echo "Host IP: $HOST_IP"
-          echo "::set-output name=host_ip::$HOST_IP"
+        run: echo "Host IP: ${{ runner.ip }}"
 
       - name: ZAP Scan
         run: |
           docker run -t --rm -v $GITHUB_WORKSPACE/zap/wrk:/zap/wrk:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://${{ steps.get_host_ip.outputs.host_ip }}:5000 -g /zap/wrk/gen.conf -r /zap/wrk/testreport.html
-          
-          # Add your additional steps here if needed
