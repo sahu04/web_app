@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: zap_scan
+          ref: testing
 
       - name: Create ZAP Work Directory
         run: mkdir -p $GITHUB_WORKSPACE/zap/wrk
