@@ -36,7 +36,8 @@ jobs:
 
 
       - name: Run python main.py
-        run: python main.py
+        run: nohup python main.py &
+
 
       - name: Pull ZAP Docker Image
         run: docker pull ghcr.io/zaproxy/zaproxy:stable
