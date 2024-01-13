@@ -74,6 +74,12 @@ jobs:
         run: |
           ngrok http 5000 > ngrok_url.txt &
           sleep 5  # Give some time for Ngrok to start
+          - name: Deploy to Local Server
+             run: |
+               echo "$SSH_PRIVATE_KEY" | base64 -d > ssh-key
+                chmod 400 ssh-key
+                rsync -avz --exclude='.git' ./website/* sahud@127.0.0.1:/c/Users/sahud/OneDrive/Desktop/web_app
+                ssh -i ssh-key sahud@127.0.0.1 "cd /c/Users/sahud/OneDrive/Desktop/web_app && pip install -r requirements.txt && python main.py"
 
   
      
