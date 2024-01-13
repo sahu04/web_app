@@ -75,10 +75,7 @@ jobs:
           ngrok http 5000 > ngrok_url.txt &
           sleep 5  # Give some time for Ngrok to start
 
-      - name: Get Ngrok URL
-        id: ngrok_url
-        run: echo "::set-output name=url::$(cat ngrok_url.txt)"
-
+  
      
 
 
