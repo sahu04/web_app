@@ -45,7 +45,7 @@ name: GitHub Actions Workflow
 on:
   push:
     branches:
-      - main
+      - testing
 
 jobs:
   build:
