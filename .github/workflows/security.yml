@@ -40,28 +40,20 @@
 
 
 
-name: ZAP Security Scan
+name: GitHub Actions Workflow
 
 on:
-  pull_request:
-    paths-ignore:
-      - '**.md'
+  push:
+    branches:
+      - main
 
 jobs:
-  zap_scan:
+  build:
     runs-on: ubuntu-latest
-    name: Security Scan and Visual Check
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: testing
-
-      - name: Create ZAP Work Directory
-        run: mkdir -p $GITHUB_WORKSPACE/zap/wrk
-
-      - name: Adjust Permissions
-        run: sudo chown -R $(whoami) $GITHUB_WORKSPACE/zap
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -74,13 +66,22 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Flask Application
-        id: run_flask
         run: |
-          nohup python main.py & echo $! > flask_pid.txt
+          nohup python main.py &
           sleep 10  # Give some time for the app to start
 
-      - name: Wait for Flask App to Start
-        run: sleep 30  # Adjust the time based on how long your app takes to start
+      - name: Expose Flask App with Ngrok
+        run: |
+          ngrok http 5000 > ngrok_url.txt &
+          sleep 5  # Give some time for Ngrok to start
+
+      - name: Get Ngrok URL
+        id: ngrok_url
+        run: echo "::set-output name=url::$(cat ngrok_url.txt)"
+
+      - name: Display Ngrok URL
+        run: echo "Ngrok URL: ${{ steps.ngrok_url.outputs.url }}"
+
 
       # - name: Run ZAP Baseline Scan
       #   run: |
