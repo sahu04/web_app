@@ -30,5 +30,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Check Application URL') {
+            steps {
+                script {
+                    // Use curl to check if the application is responsive
+                    def responseCode = sh(script: 'curl -o /dev/null -s -w "%{http_code}" http://localhost:5000', returnStatus: true)
+                    
+                    if (responseCode == 200) {
+                        // Print the URL if the application is accessible
+                        echo 'Application is accessible.'
+                        echo 'URL: http://localhost:5000'
+                    } else {
+                        error "Application health check failed. HTTP status code: ${responseCode}"
+                    }
+                }
+            }
+        }
     }
 }
+
