@@ -79,9 +79,7 @@ jobs:
         id: ngrok_url
         run: echo "::set-output name=url::$(cat ngrok_url.txt)"
 
-      - name: Display Ngrok URL
-        run: |
-          echo "Ngrok URL: ${{ steps.ngrok_url.outputs.url }}"
+     
 
 
 
