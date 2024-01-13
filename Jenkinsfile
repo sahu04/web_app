@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     // Your deployment commands
-                    sh 'nohup python main.py &'
+                    sh 'nohup python3 main.py &'
                     sleep 10  // Give some time for the app to start
                 }
             }
