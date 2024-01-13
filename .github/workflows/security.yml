@@ -80,7 +80,10 @@ jobs:
         run: echo "::set-output name=url::$(cat ngrok_url.txt)"
 
       - name: Display Ngrok URL
-        run: echo "Ngrok URL: ${{ steps.ngrok_url.outputs.url }}"
+        run: |
+          echo "Ngrok URL: ${{ steps.ngrok_url.outputs.url }}"
+
+
 
 
       # - name: Run ZAP Baseline Scan
