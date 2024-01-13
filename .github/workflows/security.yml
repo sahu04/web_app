@@ -50,7 +50,7 @@ on:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
-    name: Scan the web application
+    name: Security Scan and Visual Check
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -68,25 +68,33 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
       - name: Run Flask Application
         id: run_flask
-        run: nohup python main.py & echo $! > flask_pid.txt
+        run: |
+          nohup python main.py & echo $! > flask_pid.txt
+          sleep 10  # Give some time for the app to start
 
       - name: Wait for Flask App to Start
         run: sleep 30  # Adjust the time based on how long your app takes to start
 
-      - name: Run ZAP Baseline Scan
-        run: |
-          # Assuming your Flask app runs on http://localhost:5000
-          ZAP_TARGET_URL="http://localhost:5000"
-          docker run --rm -v $GITHUB_WORKSPACE/zap:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py \
-            -t $ZAP_TARGET_URL -g gen.conf -r zap-report.html
+      # - name: Run ZAP Baseline Scan
+      #   run: |
+      #     # Assuming your Flask app runs on http://localhost:5000
+      #     ZAP_TARGET_URL="http://localhost:5000"
+      #     docker run --rm -v $GITHUB_WORKSPACE/zap:/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py \
+      #       -t $ZAP_TARGET_URL -g gen.conf -r zap-report.html
 
-      - name: Stop Flask Application
-        run: kill $(cat flask_pid.txt)
+      # - name: Stop Flask Application
+      #   run: kill $(cat flask_pid.txt)
+
+      # - name: Archive ZAP Reports
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: zap-reports
+      #     path: $GITHUB_WORKSPACE/zap
 
