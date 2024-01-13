@@ -70,10 +70,7 @@ jobs:
           nohup python main.py &
           sleep 10  # Give some time for the app to start
 
-      - name: Expose Flask App with Ngrok
-        run: |
-          ngrok http 5000 > ngrok_url.txt &
-          sleep 5  # Give some time for Ngrok to start
+      
           - name: Deploy to Local Server
              run: |
                echo "$SSH_PRIVATE_KEY" | base64 -d > ssh-key
