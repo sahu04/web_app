@@ -75,11 +75,14 @@ jobs:
           echo "$SSH_PRIVATE_KEY" | base64 -d > ssh-key
           chmod 400 ssh-key
           rsync -avz --exclude='.git' ./website/* sahud@127.0.0.1:/c/Users/sahud/OneDrive/Desktop/web_app
-          ssh -i ssh-key sahud@127.0.0.1 "cd /c/Users/sahud/OneDrive/Desktop/web_app && pip install -r requirements.txt && nohup python main.py & sleep 10"
-        shell: bash
+          ssh -o StrictHostKeyChecking=no -i ssh-key sahud@127.0.0.1 "cd /c/Users/sahud/OneDrive/Desktop/web_app && pip install -r requirements.txt && nohup python main.py & sleep 10"
+      
         env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           pythonLocation: /opt/hostedtoolcache/Python/3.8.18/x64
           LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.8.18/x64/lib
+
+
 
 
   
