@@ -19,15 +19,14 @@ jobs:
           sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
           curl -fsSL https://get.docker.com -o get-docker.sh
           sudo sh get-docker.sh
-
           # Post-installation steps
           sudo usermod -aG docker $USER
           newgrp docker
           sudo chmod 777 /var/run/docker.sock
           sudo systemctl restart docker
 
- 
       - name: Running Horusec Security
         run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           sudo horusec start -p="./" -e="true"
+
