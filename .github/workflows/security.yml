@@ -31,6 +31,7 @@ jobs:
           sudo $DOCKER_PATH --version
 
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
-          horusec start --project-path="./" -e="true"
+          horusec start --project-path="./" -e="true" -D
+
 
 
