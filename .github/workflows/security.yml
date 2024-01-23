@@ -14,13 +14,19 @@ jobs:
 
       - name: Install Docker
         run: |
-          sudo apt-get update -y
-          sudo apt-get remove containerd -y
-          sudo apt-get update -y
-          sudo apt-get upgrade -y
-          sudo apt-get install docker.io -y
-          sudo apt-get install -f
-          sudo reboot
+          # Install Docker
+          sudo apt-get update
+          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+
+          # Post-installation steps
+          sudo usermod -aG docker $USER
+          newgrp docker
+          sudo systemctl restart docker
+
+      - name: Set Docker Socket Permissions
+        run: sudo chmod 777 /var/run/docker.sock
 
       - name: Running Horusec Security
         run: |
