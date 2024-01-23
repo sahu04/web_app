@@ -28,6 +28,8 @@ jobs:
       - name: Running Horusec Security
         run: |
           DOCKER_PATH=$(which docker)
+          sudo $DOCKER_PATH --version
+
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start --project-path="./" --enable-commit-author
 
