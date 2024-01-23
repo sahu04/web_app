@@ -31,6 +31,6 @@ jobs:
           sudo $DOCKER_PATH --version
 
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
-          horusec start --project-path="./" --enable-commit-author
+          sudo $DOCKER_PATH horusec start --project-path="./" --enable-commit-author
 
 
