@@ -29,5 +29,6 @@ jobs:
         run: |
           DOCKER_PATH=$(which docker)
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
-          horusec start --project-path="./" --enable="true"
+          horusec start --project-path="./" --enable-commit-author
+
 
